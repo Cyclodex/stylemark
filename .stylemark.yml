@@ -6,6 +6,7 @@ excludeDir:
 assets:
 # - dist
 # - fonts
+ - img
 
 theme:
     # logo: assets/brand/logo.png

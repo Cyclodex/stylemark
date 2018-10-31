@@ -26,7 +26,9 @@
   ],
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/gulp test"
+    "test": "./node_modules/.bin/gulp test",
+    "start": "bin/stylemark -i input/ -o output/ -c .stylemark.yml -w -b",
+    "noBrowser": "bin/stylemark -i input/ -o output/ -c .stylemark.yml -w"
   },
   "bin": {
     "stylemark": "bin/stylemark"
