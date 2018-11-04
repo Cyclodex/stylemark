@@ -138,7 +138,14 @@ class Parser {
 			}
 		};
 
-		const createBlockFromExternalSource = (name, language, content, optionsString) => {
+		const createBlockFromExternalSource = (name, language, content, optionsString, options) => {
+			// For template only return the HTML code, no MD-code block
+			if (options.template) {
+				var regexp = new RegExp('```\\s*?' + options.template + '.*?\n(.*?)\n```', 'smg');
+				var match = regexp.exec(content);
+				content = match[1] || '';
+				return content;
+			}
 			content = content || '';
 			return `\`\`\`${name}.${language}${optionsString}\n${content.trimRight()}\n\`\`\``;
 		};
@@ -212,9 +219,46 @@ class Parser {
 
 					// replace the external source definition block in the description with the content from the external source
 					var regexp = new RegExp('```\\s*' + name + '\\:' + externalSource + '\\.' + language + '(.*\n)+?```', 'gm');
-					description = description.replace(regexp, () => createBlockFromExternalSource(name, language, content, optionsString));
+					description = description.replace(regexp, () => createBlockFromExternalSource(name, language, content, optionsString, options));
 				}
 			} else {
+				// Parse the content again, for further "includes" if "template" is set
+				if (component.getMeta().type === 'template'){
+					// TODO: This is a lot of copy from the other code... could be improved ... 
+					var template_matches = block.match(/{{{\s*([^\.\s\:]+)(?:\:([^\s]+))?(?:(\*)|(?:\.(\w+)))(.*)}}}\n/);
+					var template_name = template_matches ? template_matches[1] : null;
+					var template_externalSource = template_matches ? template_matches[2] : null;
+					var template_externalSourceWildcard = template_matches ? template_matches[3] : null;
+					var template_language = template_matches ? template_matches[4] : null;
+					var template_optionsString = template_matches ? template_matches[5] : '';
+					var template_options = _(template_optionsString)
+						.split(' ')
+						.transform((template_options, template_optionStr) => {
+							var template_parts = template_optionStr.split('=');
+							var template_name = template_parts[0];
+							var template_value = template_parts[1];
+							template_options[template_name] = template_value;
+						}, {})
+						.value();
+					
+					var componentDir = path.dirname(component.getFilepath());
+					var template_externalSourceFilename = `${template_externalSource}.${template_language}`;
+					let template_sourcePath;
+
+					if (template_externalSourceFilename[0] === '/') {
+						// this is an absolute path, so resolve the source file relative to the base directory
+						template_sourcePath = path.resolve(this.options.baseDir, template_externalSourceFilename.slice(1));
+
+					} else {
+						// otherwise, resolve the source file relative to the component file's directory
+						template_sourcePath = path.resolve(componentDir, template_externalSourceFilename);
+					}
+					var template_content = fs.readFileSync(template_sourcePath, 'utf8');
+					var template_regexp = new RegExp('{{{\\s*' + template_name + '\\:' + template_externalSource + '\\.' + template_language + '(.*)+?}}}', 'g');
+					block = block.replace(template_regexp, () => createBlockFromExternalSource(template_name, template_language, template_content, template_optionsString, template_options));
+					description = block;
+				}
+			
 				content = block
 					.replace(/```.*\n/m, '')  // Removes leading ```[language]
 					.replace(/\n```.*/m, '');  // Removes trailing ```
