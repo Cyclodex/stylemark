@@ -1,11 +1,23 @@
 name: Acme Design
 
+# Specific paths to watch
+fileWatchPaths:
+    - input
+
+# Further options for chokidar.watch
+#fileWatchOptions:
+
+# Browsersync Options
+browserSyncOptions:
+    files:
+        - output/**/*.*
+
 excludeDir:
-- C
+ - C
+
+baseDir: input
 
 assets:
-# - dist
-# - fonts
  - img
 
 theme:
