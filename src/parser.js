@@ -224,39 +224,54 @@ class Parser {
 			} else {
 				// Parse the content again, for further "includes" if "template" is set
 				if (component.getMeta().type === 'template'){
-					// TODO: This is a lot of copy from the other code... could be improved ... 
-					var template_matches = block.match(/{{{\s*([^\.\s\:]+)(?:\:([^\s]+))?(?:(\*)|(?:\.(\w+)))(.*)}}}\n/);
-					var template_name = template_matches ? template_matches[1] : null;
-					var template_externalSource = template_matches ? template_matches[2] : null;
-					var template_externalSourceWildcard = template_matches ? template_matches[3] : null;
-					var template_language = template_matches ? template_matches[4] : null;
-					var template_optionsString = template_matches ? template_matches[5] : '';
-					var template_options = _(template_optionsString)
-						.split(' ')
-						.transform((template_options, template_optionStr) => {
-							var template_parts = template_optionStr.split('=');
-							var template_name = template_parts[0];
-							var template_value = template_parts[1];
-							template_options[template_name] = template_value;
-						}, {})
-						.value();
-					
-					var componentDir = path.dirname(component.getFilepath());
-					var template_externalSourceFilename = `${template_externalSource}.${template_language}`;
-					let template_sourcePath;
 
-					if (template_externalSourceFilename[0] === '/') {
-						// this is an absolute path, so resolve the source file relative to the base directory
-						template_sourcePath = path.resolve(this.options.baseDir, template_externalSourceFilename.slice(1));
+					// Iterate over all literals
+					var template_blocks = block.match(/{{{\s*([^\.\s\:]+)(?:\:([^\s]+))?(?:(\*)|(?:\.(\w+)))(.*)}}}/g);
+					var template_blocks_amount = template_blocks.length;
+					// Remove duplicates because we exchange it everywhere in document
+					template_blocks = _.uniq(template_blocks);
 
-					} else {
-						// otherwise, resolve the source file relative to the component file's directory
-						template_sourcePath = path.resolve(componentDir, template_externalSourceFilename);
-					}
-					var template_content = fs.readFileSync(template_sourcePath, 'utf8');
-					var template_regexp = new RegExp('{{{\\s*' + template_name + '\\:' + template_externalSource + '\\.' + template_language + '(.*)+?}}}', 'g');
-					block = block.replace(template_regexp, () => createBlockFromExternalSource(template_name, template_language, template_content, template_optionsString, template_options));
-					description = block;
+					// Output info
+					console.log("Found " + template_blocks.length + " unique literals to replace ( off " + template_blocks_amount + ")");
+					console.log({template_blocks});
+
+					_.forEach(template_blocks, (template_block) => {
+
+						// TODO: This is a lot of copy from the other code... could be improved ... 
+						var template_matches = template_block.match(/{{{\s*([^\.\s\:]+)(?:\:([^\s]+))?(?:(\*)|(?:\.(\w+)))(.*)}}}/);
+						var template_name = template_matches ? template_matches[1] : null;
+						var template_externalSource = template_matches ? template_matches[2] : null;
+						var template_externalSourceWildcard = template_matches ? template_matches[3] : null;
+						var template_language = template_matches ? template_matches[4] : null;
+						var template_optionsString = template_matches ? template_matches[5] : '';
+						var template_options = _(template_optionsString)
+							.split(' ')
+							.transform((template_options, template_optionStr) => {
+								var template_parts = template_optionStr.split('=');
+								var template_name = template_parts[0];
+								var template_value = template_parts[1];
+								template_options[template_name] = template_value;
+							}, {})
+							.value();
+						
+						var componentDir = path.dirname(component.getFilepath());
+						var template_externalSourceFilename = `${template_externalSource}.${template_language}`;
+						let template_sourcePath;
+
+						if (template_externalSourceFilename[0] === '/') {
+							// this is an absolute path, so resolve the source file relative to the base directory
+							template_sourcePath = path.resolve(this.options.baseDir, template_externalSourceFilename.slice(1));
+
+						} else {
+							// otherwise, resolve the source file relative to the component file's directory
+							template_sourcePath = path.resolve(componentDir, template_externalSourceFilename);
+						}
+						var template_content = fs.readFileSync(template_sourcePath, 'utf8');
+						var template_regexp = new RegExp('{{{\\s*' + template_name + '\\:' + template_externalSource + '\\.' + template_language + ' template=' + template_options.template + '}}}', 'gm');
+						
+						block = block.replace(template_regexp, () => createBlockFromExternalSource(template_name, template_language, template_content, template_optionsString, template_options));
+						description = block;
+					});
 				}
 			
 				content = block
