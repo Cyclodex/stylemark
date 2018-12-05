@@ -140,7 +140,7 @@ class Parser {
 
 		const createBlockFromExternalSource = (name, language, content, optionsString, options) => {
 			// For template only return the HTML code, no MD-code block
-			if (options.template) {
+			if (options && options.template) {
 				var regexp = new RegExp('```\\s*?' + options.template + '.*?\n(.*?)\n```', 'smg');
 				var match = regexp.exec(content);
 				content = match[1] || '';
