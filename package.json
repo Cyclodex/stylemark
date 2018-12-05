@@ -1,7 +1,7 @@
 {
   "name": "stylemark",
-  "version": "3.0.3",
-  "description": "A living style guide generator for everything.",
+  "version": "4.0.0",
+  "description": "A living style guide generator for everything. Extended for GARAIO AG",
   "keywords": [
     "styleguide generator",
     "style guide generator",
@@ -33,12 +33,12 @@
   "bin": {
     "stylemark": "bin/stylemark"
   },
-  "homepage": "https://github.com/nextbigsoundinc/stylemark",
-  "repository": "https://github.com/nextbigsoundinc/stylemark.git",
+  "homepage": "https://github.com/cyclodex/stylemark",
+  "repository": "https://github.com/cyclodex/stylemark.git",
   "bugs": {
-    "url": "https://github.com/nextbigsoundinc/stylemark/issues"
+    "url": "https://github.com/cyclodex/stylemark/issues"
   },
-  "author": "Mike Petrovich <michael.c.petrovich@gmail.com>",
+  "author": "Fabian Gander <fabian.gander@garaio.com>;",
   "license": "MIT",
   "engine": {
     "node": "6.x"
