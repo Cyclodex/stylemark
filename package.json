@@ -43,9 +43,6 @@
   "engine": {
     "node": "6.x"
   },
-  "bundleDependencies": [
-    "rfr"
-  ],
   "dependencies": {
     "babel-core": "6.26.3",
     "babel-preset-react": "6.24.1",
@@ -65,8 +62,7 @@
     "mkdirp": "0.5.1",
     "moment": "2.22.2",
     "node-dir": "0.1.17",
-    "node-pre-gyp": "0.11.0",
-    "rfr": "1.2.3"
+    "node-pre-gyp": "0.11.0"
   },
   "devDependencies": {
     "chai": "1.10.0",
