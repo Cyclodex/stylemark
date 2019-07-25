@@ -13,7 +13,7 @@ browserSyncOptions:
         - output/**/*.*
 
 excludeDir:
- - C
+ - B
 
 baseDir: input
 

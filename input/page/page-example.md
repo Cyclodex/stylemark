@@ -11,7 +11,9 @@ version: 1.0.0
 <div class="test">
 
 {{{link:../A/input.css template=link}}}
-{{{link:../A/input.css template=link}}}
+{{{link:../A/input.css template=disabled}}}
+
+{{{link:../C/input.md template=types}}}
 
 Some other shit
 </div>
