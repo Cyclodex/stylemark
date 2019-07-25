@@ -5,4 +5,8 @@
 		<span class="theme-content-element-source-path">{{doc.filepathRelativeToInput}}</span>
 	</span>
 	<div class="theme-content-element-description">{{markdown doc.description}}</div>
+	{{#if doc.source}}
+		<span class="theme-content-element-source-label">Template source code (component-view):</span>
+		<div class="theme-content-element-template-source">{{markdown doc.source}}</div>
+	{{/if}}
 </div>

@@ -224,6 +224,10 @@ class Parser {
 				// Parse the content again, for further "includes" if "template" is set
 				if (component.getMeta().type === 'template'){
 
+					// Extract template source code
+					let template = block;
+					component.setSource(template);
+					
 					// Iterate over all literals
 					var template_blocks = block.match(/{{{\s*([^\.\s\:]+)(?:\:([^\s]+))?(?:(\*)|(?:\.(\w+)))(.*)}}}/g);
 					var template_blocks_amount = template_blocks.length;
