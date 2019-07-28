@@ -9,12 +9,8 @@ version: 1.0.0
 
 ```register.html
 <div class="test">
-
-{{{link:../A/input.css template=link}}}
-{{{link:../A/input.css template=disabled}}}
-
-{{{link:../C/input.md template=types}}}
-
-Some other shit
+  {{{test1:../components/image.md template=test1}}}
+  {{{test2:../components/image.md template=test2}}}
+  {{{test3:../components/image.md template=test3}}}
 </div>
 ```

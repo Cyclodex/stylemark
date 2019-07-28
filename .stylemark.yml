@@ -2,58 +2,60 @@ name: Acme Design
 
 # Specific paths to watch
 fileWatchPaths:
-    - input
+  - input
 
 # Further options for chokidar.watch
 #fileWatchOptions:
 
 # Browsersync Options
 browserSyncOptions:
-    files:
-        - output/**/*.*
+  files:
+    - output/**/*.*
 
 excludeDir:
- - B
+  - A
+  - B
+  - C
 
 baseDir: input
 
 assets:
- - img
+  - img
 
 theme:
-    # logo: assets/brand/logo.png
+  # logo: assets/brand/logo.png
 
-    css:
-    # - theme/theme.css
+  css:
+  # - theme/theme.css
 
-    js:
-    # - theme/theme.js
+  js:
+  # - theme/theme.js
 
-    sidebar:
-        background: "#3b2a55"
-        textColor: "#fff"
+  sidebar:
+    background: "#3b2a55"
+    textColor: "#fff"
 
 examples:
-    css:
-    # - dist/css/app.min.css
+  css:
+  # - dist/css/app.min.css
 
-    js:
-    # - https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js
-    # - dist/js/app.min.js
+  js:
+  # - https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js
+  # - dist/js/app.min.js
 
-    doctypeTag: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-    htmlTag: <html id="acme">
-    bodyTag: <body class="acme-body">
+  doctypeTag: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+  htmlTag: <html id="acme">
+  bodyTag: <body class="acme-body">
 
-    headHtml: |
-        <meta name="google-site-verification" content="52cae…">
-        <script>
-            window.disableRouting = true;
-        </script>
+  headHtml: |
+    <meta name="google-site-verification" content="52cae…">
+    <script>
+        window.disableRouting = true;
+    </script>
 
-    bodyHtml: |
-        <div style="padding: 20px">
-            {html}
-        </div>
+  bodyHtml: |
+    <div style="padding: 20px">
+        {html}
+    </div>
 
 order:
