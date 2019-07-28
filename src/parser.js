@@ -229,8 +229,12 @@ class Parser {
 					component.setSource(template);
 					
 					// Iterate over all literals
-					var template_blocks = block.match(/{{{\s*([^\.\s\:]+)(?:\:([^\s]+))?(?:(\*)|(?:\.(\w+)))(.*)}}}/g);
-					var template_blocks_amount = template_blocks.length;
+					var template_blocks = block.match(
+						/{{{\s*([^\.\s\:]+)(?:\:([^\s]+))?(?:(\*)|(?:\.(\w+)))(.*)}}}/g
+					);
+					var template_blocks_amount = template_blocks
+						? template_blocks.length
+						: 0;
 					// Remove duplicates because we exchange it everywhere in document
 					template_blocks = _.uniq(template_blocks);
 
@@ -238,10 +242,27 @@ class Parser {
 					console.log("Found " + template_blocks.length + " unique literals to replace ( off " + template_blocks_amount + ")");
 					console.log({template_blocks});
 
-					_.forEach(template_blocks, (template_block) => {
+					_.forEach(template_blocks, template_block => {
+						getTemplateCode(template_block);
+					});
 
-						// TODO: This is a lot of copy from the other code... could be improved ... 
-						var template_matches = template_block.match(/{{{\s*([^\.\s\:]+)(?:\:([^\s]+))?(?:(\*)|(?:\.(\w+)))(.*)}}}/);
+					function getTemplateCode(
+						template_block,
+						componentDir = path.dirname(component.getFilepath())
+					) {
+						// console.log("------------ template_block");
+						// console.log(template_block);
+						// TODO: This is a lot of copy from the other code... could be improved ...
+						var template_matches = template_block.match(
+							/{{{\s*([^\.\s\:]+)(?:\:([^\s]+))?(?:(\*)|(?:\.(\w+)))(.*)}}}/
+						);
+						// console.log("template_matches");
+						// console.log(template_matches);
+						if (!template_matches) {
+							description = block;
+							return;
+						}
+
 						var template_name = template_matches ? template_matches[1] : null;
 						var template_externalSource = template_matches ? template_matches[2] : null;
 						var template_externalSourceWildcard = template_matches ? template_matches[3] : null;
@@ -269,12 +290,34 @@ class Parser {
 							// otherwise, resolve the source file relative to the component file's directory
 							template_sourcePath = path.resolve(componentDir, template_externalSourceFilename);
 						}
-						var template_content = fs.readFileSync(template_sourcePath, 'utf8');
-						var template_regexp = new RegExp('{{{\\s*' + template_name + '\\:' + template_externalSource + '\\.' + template_language + ' template=' + template_options.template + '}}}', 'gm');
-						
-						block = block.replace(template_regexp, () => createBlockFromExternalSource(template_name, template_language, template_content, template_optionsString, template_options));
+						var template_content = fs.readFileSync(template_sourcePath, "utf8");
+						var template_regexp = new RegExp(
+							"{{{\\s*" +
+							template_name +
+							"\\:" +
+							template_externalSource +
+							"\\." +
+							template_language +
+							" template=" +
+							template_options.template +
+							"}}}",
+							"gm"
+						);
+
+						block = block.replace(template_regexp, () =>
+							createBlockFromExternalSource(
+								template_name,
+								template_language,
+								template_content,
+								template_optionsString,
+								template_options
+							)
+						);
 						description = block;
-					});
+						// console.log("############ block");
+						// console.log(block);
+						getTemplateCode(block, path.dirname(template_sourcePath));
+					}
 				}
 			
 				content = block
