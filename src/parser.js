@@ -7,6 +7,9 @@ var dir = require('node-dir');
 var path = require('path');
 var fs = require('fs');
 
+const CONSOLE_RED = "\x1b[31m";
+const CONSOLE_DEFAULT = "\x1b[0m";
+
 class Parser {
 
 	constructor(options = {}) {
@@ -143,6 +146,10 @@ class Parser {
 			if (options && options.template) {
 				var regexp = new RegExp('```\\s*?' + options.template + '.*?\n(.*?)\n```', 'smg');
 				var match = regexp.exec(content);
+				if (!match) {
+					console.error(CONSOLE_RED, "ERROR: ", CONSOLE_DEFAULT, "Could not find " + options.template);
+					return;
+				}
 				content = match[1] || '';
 				return content;
 			}
@@ -188,7 +195,7 @@ class Parser {
 			if (externalSource) {
 				var componentDir = path.dirname(component.getFilepath());
 				if (externalSourceWildcard) {
-					var externalSourceFiles = dir.files(path.resolve(componentDir, externalSource), {sync: true});
+					var externalSourceFiles = dir.files(path.resolve(componentDir, externalSource), { sync: true });
 					var extractedExampleBlocks = [];
 					_.forEach(externalSourceFiles, filepath => {
 						var language = path.extname(filepath).substr(1);
@@ -223,12 +230,12 @@ class Parser {
 				}
 			} else {
 				// Parse the content again, for further "includes" if "template" is set
-				if (component.getMeta().type === 'template'){
+				if (component.getMeta().type === 'template') {
 
 					// Extract template source code
 					let template = block;
 					component.setSource(template);
-					
+
 					// Iterate over all literals
 					var template_blocks = block.match(
 						/{{{\s*([^\.\s\:]+)(?:\:([^\s]+))?(?:(\*)|(?:\.(\w+)))(.*)}}}/g
@@ -240,8 +247,8 @@ class Parser {
 					template_blocks = _.uniq(template_blocks);
 
 					// Output info
-					console.log("Found " + template_blocks.length + " unique literals to replace ( off " + template_blocks_amount + ")");
-					console.log({template_blocks});
+					console.log("Found " + template_blocks.length + " unique literals to replace (" + template_blocks_amount + " total)");
+					console.log({ template_blocks });
 
 					_.forEach(template_blocks, template_block => {
 						getTemplateCode(template_block);
@@ -278,7 +285,7 @@ class Parser {
 								template_options[template_name] = template_value;
 							}, {})
 							.value();
-						
+
 						var componentDir = path.dirname(component.getFilepath());
 						var template_externalSourceFilename = `${template_externalSource}.${template_language}`;
 						let template_sourcePath;
@@ -320,7 +327,7 @@ class Parser {
 						getTemplateCode(block, path.dirname(template_sourcePath));
 					}
 				}
-			
+
 				content = block
 					.replace(/```.*\n/m, '')  // Removes leading ```[language]
 					.replace(/\n```.*/m, '');  // Removes trailing ```
