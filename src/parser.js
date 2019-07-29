@@ -112,6 +112,7 @@ class Parser {
 	}
 
 	_parseDescriptionMarkdown(markdown, component) {
+		var self = this;
 		var description = markdown;
 
 		// Extracts blocks from description
@@ -208,7 +209,7 @@ class Parser {
 
 					if (externalSourceFilename[0] === '/') {
 						// this is an absolute path, so resolve the source file relative to the base directory
-						sourcePath = path.resolve(this.options.baseDir, externalSourceFilename.slice(1));
+						sourcePath = path.resolve(self.options.baseDir, externalSourceFilename.slice(1));
 
 					} else {
 						// otherwise, resolve the source file relative to the component file's directory
@@ -284,7 +285,7 @@ class Parser {
 
 						if (template_externalSourceFilename[0] === '/') {
 							// this is an absolute path, so resolve the source file relative to the base directory
-							template_sourcePath = path.resolve(this.options.baseDir, template_externalSourceFilename.slice(1));
+							template_sourcePath = path.resolve(self.options.baseDir, template_externalSourceFilename.slice(1));
 
 						} else {
 							// otherwise, resolve the source file relative to the component file's directory
