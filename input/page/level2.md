@@ -7,7 +7,7 @@ A simple image.
 
 ```a.html
 <h2>Level 2 A</h2>
-{{{level2:level2.md template=b}}}
+{{{level2:/page/level2.md template=b}}}
 ```
 
 ```b.html

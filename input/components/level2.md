@@ -8,8 +8,8 @@ A simple image.
 
 ```a.html
 <h2>Components Level 2 A</h2>
-{{{level2:level2.md template=b}}}
-{{{image:image.md template=test1}}}
+{{{level2:/components/level2.md template=b}}}
+{{{image:/components/image.md template=test-1}}}
 ```
 
 ```b.html

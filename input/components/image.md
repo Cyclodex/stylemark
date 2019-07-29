@@ -12,17 +12,17 @@ todos:
 
 A simple image.
 
-```test1.html
+```test-1.html
 <h2>MD image (1)</h2>
 <img width="50" src="img/webpack.png" />
 ```
 
-```test2
+```test-2.html
 <h2>MD image (2)</h2>
 <img width="50" src="img/webpack.png" />
 ```
 
-```test3
+```test-3.html
 <h2>MD image (3)</h2>
 <img width="50" src="img/webpack.png" />
 ```

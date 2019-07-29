@@ -10,6 +10,6 @@ version: 1.0.0
 ```root.html
 <h1>ROOT</h1>
 <div class="test">
-  {{{level1:level1.md template=levela}}}
+  {{{level1:/page/level1.md template=levela}}}
 </div>
 ```
